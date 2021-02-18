@@ -1,26 +1,28 @@
 #pragma once
 
-#include <stdio.h>
+typedef unsigned int uint32_t;
+using namespace std;
 
 namespace cpy
 {
-	template<typename MATRIX_VALUE>
+
+	template<typename MATRIX_TYPE>
 	class matrix
 	{
 	private:
 
-		uint32_t matrix_rowNumber,
-			matrix_columnNumber;
+		uint32_t rowSize,
+			columnSize;
 
-		int* MATRIX = new MATRIX_VALUE[matrix_rowNumber * matrix_columnNumber];
+		int* MATRIX = new MATRIX_TYPE[rowSize * columnSize];
 
 
 	public:
 
 		matrix(uint32_t n, uint32_t m)
-			:matrix_rowNumber(n), matrix_columnNumber(m)
+			:rowSize(n), columnSize(m)
 		{
-			for (int i = 0; i < matrix_rowNumber * matrix_columnNumber; ++i)
+			for (int i = 0; i <size(); ++i)
 				MATRIX[i] = 0;
 		}
 
@@ -30,27 +32,15 @@ namespace cpy
 		}
 
 
-		int* operator= (const matrix& valueSource)
-		{
-			for (int i = 0; i < matrix_rowNumber; ++i) {
-				for (int j = 0; j < matrix_columnNumber; ++j)
-				{
-					MATRIX[i * matrix_columnNumber + j] = valueSource[i][j];
-
-					return MATRIX;
-				}
-			}
-		}
-
-		//intput index with brackets [][]
+		//initialize index with brackets [][]
 		const int* operator [](int*& rowIndex) const
 		{
-			return &MATRIX[*rowIndex * matrix_columnNumber];
+			return &MATRIX[*rowIndex * columnSize];
 		}
 
 		const int* operator [](int& columnIndex) const
 		{
-			return &MATRIX[columnIndex * matrix_columnNumber];
+			return &MATRIX[columnIndex * columnSize];
 		}
 
 
@@ -59,9 +49,9 @@ namespace cpy
 		{
 			bool areEqual = true;
 
-			for (int i = 0; i < matrix_rowNumber * matrix_columnNumber; ++i)
+			for (int i = 0; i < rowSize * columnSize; ++i)
 			{
-				if (MATRIX[i] != compareTo.MATRIX[i])
+				if (&MATRIX[i] != compareTo.MATRIX[i])
 				{
 					areEqual = false;
 					break;
@@ -76,18 +66,35 @@ namespace cpy
 			return this->operator== (compareTo);
 		}
 
+		int size()
+		{
+			return rowSize * columnSize;
+		}
 
 		int* row(uint32_t row_)
 		{
-			int* rowCopy = new MATRIX_VALUE[matrix_columnNumber];
-			for (int i = row_; i < matrix_columnNumber * row_; ++i)
+			int* rowCopy= new int[&columnSize];
+			for (int i = row_; i < columnSize * row_; ++i)
 			{
-				rowCopy[i] == MATRIX[i];
+				rowCopy[i-row_] = &MATRIX[i];
+				
 			}
-
-			return rowCopy;
+			return  rowCopy;
 
 			delete[] rowCopy;
+		}
+
+		int* column(uint32_t column_)
+		{
+			int* columnCopy = new int[&rowSize];
+			for (int i = column_; i < rowSize * column_; ++i)
+			{
+				columnCopy[i - column_] = &MATRIX[i];
+
+			}
+			return  columnCopy;
+
+			delete[] columnCopy;
 		}
 	};
 }
