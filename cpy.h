@@ -1,6 +1,7 @@
 #pragma once
 
 typedef unsigned int uint32_t;
+using namespace std;
 
 namespace cpy
 {
@@ -13,33 +14,74 @@ namespace cpy
 		uint32_t rowSize,
 			columnSize;
 
+		int* MATRIX = new MATRIX_TYPE[rowSize * columnSize];
 
-		int** MATRIX = new int*[rowSize];
 
 	public:
 
-		matrix( uint32_t n, uint32_t m)
+		matrix(uint32_t n, uint32_t m)
 			:rowSize(n), columnSize(m)
 		{
-			for (int i = 0; i < n; i++)
-			{
-				MATRIX[i] = new int[columnSize];
-			}
+			for (int i = 0; i < size(); ++i)
+				MATRIX[i] = 0;
 		}
-
 
 		virtual ~matrix()
 		{
 			delete[] MATRIX;
 		}
 
-		
+
+		//initialize index with brackets [][]
+		const int* operator [](int*& rowIndex) const
+		{
+			return &MATRIX[*rowIndex * columnSize];
+		}
+
+		const int* operator [](int& columnIndex) const
+		{
+			return &MATRIX[columnIndex * columnSize];
+		}
+
+
+		matrix& operator= (matrix& revalueTo)
+			//can't revalue matrix with an array or heap,
+			//only with same type
+		{
+			this->MATRIX = revalueTo.MATRIX;
+
+			return *this;
+		}
+
+
+		const bool operator == (matrix& compareTo)
+			//works only on same-size matrices
+		{
+			bool areEqual = true;
+
+			for (int i = 0; i < rowSize * columnSize; ++i)
+			{
+				if (&MATRIX[i] != compareTo.MATRIX[i])
+				{
+					areEqual = false;
+					break;
+				}
+			}
+
+			return areEqual;
+		}
+
+		const bool operator!= (matrix& compareTo)
+		{
+			return this->operator== (compareTo);
+		}
+
 		int size()
 		{
 			return rowSize * columnSize;
 		}
 
-
+	
 		int* row(uint32_t row_)
 	 // you can take the row if the l-value you are 
 	 //	giving this row/column is an heap-allocated array 

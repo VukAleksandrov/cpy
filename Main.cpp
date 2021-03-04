@@ -5,10 +5,6 @@
 
 int main()
 {
-	cpy::matrix<int> a(3,4);
-
-	for (int i=0;i<3;i++)
-	{
-		
-	}
+	std::vector<int> a = { 1,2,3,4,5 };
+	cpy::matrix<int> b = { 1,2,3,4,5 };
 }
