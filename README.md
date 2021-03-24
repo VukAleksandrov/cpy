@@ -1,5 +1,5 @@
 # cpy
-Python libraries for C++
+Matrix library for C++
 
 #
 #Hi,my name is Vuk and I'm primary student in Serbia.
